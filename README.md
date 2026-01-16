@@ -2,6 +2,16 @@
 
 This repository provides a complete pipeline for preparing COLMAP data for 3D Gaussian Splatting initialization. The pipeline extracts camera parameters, sparse point clouds, and initializes Gaussian parameters from a set of input images.
 
+In the first phase of this project, I implemented a complete Structure-from-Motion (SfM) pipeline using COLMAP to bridge the gap between 2D image sets and 3D geometric initialization. Using a $360^{\circ}$ image dataset, I performed feature extraction and matching to estimate the camera intrinsics ($K$ matrix) and extrinsics ($R, t$). This process resulted in a sparse point cloud, which serves as the critical starting point for 3D Gaussian Splatting, where each 3D point is mapped to a Gaussian mean ($\mu$).
+
+To ensure data integrity, I analyzed the resulting PLY files, examining vertex counts and color attributes to understand how raw geometry is structured before being converted into Gaussian parameters. This hands-on implementation provided clear insight into how 3D points are generated and how camera poses are recovered from uncalibrated images.
+
+I also examined the difference between isotropic and anisotropic Gaussian representations to better understand their role in scene modeling. While isotropic Gaussians assume uniform variance in all directions and offer a simple initialization, anisotropic Gaussians allow direction-dependent covariance, enabling a more expressive representation of local geometry. Understanding this distinction clarified why anisotropic covariances are critical for high-quality 3D Gaussian Splatting, even though my current work focuses on earlier pipeline stages.
+
+After successfully establishing the initial camera poses and sparse geometry with COLMAP, I moved beyond simply using the pipeline and focused on building an intuitive understanding of the mathematical foundations behind 3D Gaussian Splatting. While my current implementation stops at the this stage, I have spent time studying the core linear algebra involved in the later stages of the pipeline—particularly world-to-camera transformations, and the alpha compositing equations used for volumetric rendering.
+
+Rather than aiming for full technical mastery, this theoretical exploration has helped me develop a more informed way of reasoning about the system beyond treating it as a black box. By studying topics such as EWA splatting, view-dependent distortions, and differential geometry, I have begun to build an intuition for the mathematical mechanisms that underlie the rendering process. This groundwork prepares me for the next phase: experimenting with SOTA implementations and modifying existing pipelines to observe real-world behavioral changes.
+
 ## Project Structure
 
 ```
@@ -135,18 +145,6 @@ Images → COLMAP → Sparse Reconstruction → Python Processing → Gaussian P
     ↓         ↓              ↓                      ↓               ↓
  images/   database.db    sparse/0/points3D.ply   scripts/     gaussian_params.npz
 ```
-
-## Implementation Journey: Building 3DGS Pipeline from Scratch
-
-In the first phase of this roadmap, I implemented a complete Structure-from-Motion (SfM) pipeline using COLMAP to bridge the gap between 2D image sets and 3D geometric initialization. Using a $360^{\circ}$ image dataset, I performed feature extraction and matching to estimate the camera intrinsics ($K$ matrix) and extrinsics ($R, t$). This process resulted in a sparse point cloud, which serves as the critical starting point for 3D Gaussian Splatting, where each 3D point is mapped to a Gaussian mean ($\mu$).
-
-To ensure data integrity, I analyzed the resulting PLY files, examining vertex counts and color attributes to understand how raw geometry is structured before being converted into Gaussian parameters. This hands-on implementation provided clear insight into how 3D points are generated and how camera poses are recovered from uncalibrated images.
-
-I also examined the difference between isotropic and anisotropic Gaussian representations to better understand their role in scene modeling. While isotropic Gaussians assume uniform variance in all directions and offer a simple initialization, anisotropic Gaussians allow direction-dependent covariance, enabling a more expressive representation of local geometry. Understanding this distinction clarified why anisotropic covariances are critical for high-quality 3D Gaussian Splatting, even though my current work focuses on earlier pipeline stages.
-
-After successfully establishing the initial camera poses and sparse geometry with COLMAP, I moved beyond simply using the pipeline and focused on building an intuitive understanding of the mathematical foundations behind 3D Gaussian Splatting. While my current implementation stops at the point cloud stage, I have spent considerable time studying the core linear algebra involved in the later stages of the pipeline—particularly world-to-camera transformations, the use of Jacobian matrices in perspective projection, and the alpha compositing equations used for volumetric rendering.
-
-Rather than aiming for full technical mastery, this theoretical exploration has helped me develop a more informed way of reasoning about the system beyond treating it as a black box. By studying topics such as EWA splatting, view-dependent distortions, and differential geometry, I have begun to build an intuition for the mathematical mechanisms that underlie the rendering process. This groundwork prepares me for the next phase: experimenting with SOTA implementations and modifying existing pipelines to observe real-world behavioral changes.
 
 ## Troubleshooting
 

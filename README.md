@@ -1,5 +1,8 @@
 # 3DGS: Images to Gaussians
 
+![Python](https://img.shields.io/badge/python-3.10-blue.svg)
+![COLMAP](https://img.shields.io/badge/COLMAP-v3.8+-red.svg)
+
 This repository provides a complete pipeline for preparing COLMAP data for 3D Gaussian Splatting initialization. The pipeline extracts camera parameters, sparse point clouds, and initializes Gaussian parameters from a set of input images.
 
 In the first phase of this project, I implemented a complete Structure-from-Motion (SfM) pipeline using COLMAP to bridge the gap between 2D image sets and 3D geometric initialization. Using a $360^{\circ}$ image dataset, I performed feature extraction and matching to estimate the camera intrinsics ($K$ matrix) and extrinsics ($R, t$). This process resulted in a sparse point cloud, which serves as the critical starting point for 3D Gaussian Splatting, where each 3D point is mapped to a Gaussian mean ($\mu$).
